@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benim Beşinci Mevsimim Sensin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Great+Vibes&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #ff0a54;
+            --secondary: #ff477e;
+            --dark: #050505;
+            --text: #f1f1f1;
+            --gold: #ffd700;
+            --glass: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- GİRİŞ EKRANI --- */
+        #intro-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease;
+        }
+
+        .start-btn {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-btn:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 30px var(--primary);
+        }
+
+        .pulse-heart {
+            font-size: 5rem;
+            color: var(--primary);
+            animation: pulse 1.5s infinite;
+            filter: drop-shadow(0 0 20px var(--primary));
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        /* --- ARKA PLAN --- */
+        #background-hearts {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(circle at center, #1a0b14 0%, #000000 100%);
+        }
+
+        .floating-heart {
+            position: absolute;
+            bottom: -50px;
+            color: rgba(255, 10, 84, 0.3);
+            animation: floatUp linear forwards;
+        }
+
+        @keyframes floatUp {
+            to { transform: translateY(-120vh) rotate(360deg); }
+        }
+
+        /* --- İÇERİK --- */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Great Vibes', cursive;
+            text-align: center;
+            font-weight: normal;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, var(--primary), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: #ccc;
+            letter-spacing: 4px;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+
+        /* Mektup Kartı */
+        .letter-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            padding: 50px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin: 80px 0;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .letter-card::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 10rem;
+            color: rgba(255,255,255,0.05);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .highlight {
+            color: var(--primary);
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 10, 84, 0.5);
+        }
+
+        /* Detaylar */
+        .details-section { margin: 80px 0; }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.03);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.3s;
+        }
+
+        .detail-item:hover {
+            transform: translateX(10px);
+            background: rgba(255,255,255,0.06);
+        }
+
+        .detail-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-right: 20px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* Neden Sen */
+        .section-title {
+            font-size: 3.5rem;
+            margin: 80px 0 40px;
+            color: var(--text);
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .reason-card {
+            background: #0f0f0f;
+            padding: 40px 20px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid #222;
+            transition: all 0.4s;
+        }
+        
+        .reason-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(255, 10, 84, 0.2);
+        }
+
+        .reason-icon {
+            font-size: 2.5rem;
+            background: -webkit-linear-gradient(45deg, var(--primary), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        /* --- FOTOĞRAF GALERİSİ (YENİLENMİŞ) --- */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+            padding: 20px 0;
+        }
+
+        .photo-frame {
+            background-color: #ffffff; /* Beyaz Çerçeve */
+            padding: 15px 15px 60px 15px; /* Polaroid alt boşluğu */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            border-radius: 3px;
+            position: relative;
+            height: 420px; /* Sabit yükseklik */
+            transform: rotate(-2deg); /* Hafif eğiklik */
+            transition: transform 0.4s ease, z-index 0s;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        /* Kartlara çeşitlilik katmak için alternatif dönüş */
+        .photo-frame:nth-child(even) {
+            transform: rotate(2deg);
+        }
+
+        .photo-frame:hover {
+            transform: scale(1.05) rotate(0deg) !important; /* Üzerine gelince düzleşir ve büyür */
+            z-index: 50; /* Diğerlerinin önüne geçer */
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Resmi kutuya sığdırır */
+            border: 1px solid #f0f0f0;
+            display: block;
+            flex-grow: 1; /* Resmi alana yayar */
+        }
+
+        .photo-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px; /* Alt boşluğa denk */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #222; /* Siyah Yazı */
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.8rem;
+            text-align: center;
+            transform: none; /* Animasyon iptal, sabit duruyor */
+            background: transparent;
+            padding: 0 10px;
+        }
+
+        /* --- BARISMA BUTONU --- */
+        .action-area {
+            text-align: center;
+            padding: 100px 20px;
+            background: radial-gradient(circle, rgba(255,10,84,0.1) 0%, rgba(0,0,0,0) 70%);
+        }
+
+        #forgive-btn {
+            background: #fff;
+            color: var(--primary);
+            border: none;
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+            transition: transform 0.2s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        #forgive-btn:active { transform: scale(0.95); }
+
+        .hidden-msg {
+            display: none;
+            margin-top: 30px;
+            font-size: 1.5rem;
+            color: var(--gold);
+            animation: fadeIn 1s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Müzik Butonu */
+        .music-control {
+            position: fixed;
+            bottom: 30px; right: 30px;
+            background: rgba(255, 10, 84, 0.2);
+            backdrop-filter: blur(5px);
+            width: 50px; height: 50px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 100;
+            border: 1px solid var(--primary);
+            animation: spin 4s linear infinite;
+            animation-play-state: paused;
+        }
+        .music-control.playing { animation-play-state: running; box-shadow: 0 0 15px var(--primary); }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 3rem; }
+            .letter-card { padding: 30px 20px; }
+            .section-title { font-size: 2.5rem; }
+            .photo-frame { height: 350px; } /* Mobilde biraz daha kısa */
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="sarki.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="intro-overlay">
+        <i class="fas fa-heart pulse-heart"></i>
+        <p style="margin-top: 20px; color: #aaa; letter-spacing: 2px;">Kulaklığını Tak, Kalbini Aç...</p>
+        <button class="start-btn" onclick="startExperience()">Hikayemizi Başlat</button>
+    </div>
+
+    <div class="music-control" id="music-btn" onclick="toggleMusic()">
+        <i class="fas fa-music" style="color: white;"></i>
+    </div>
+
+    <div id="background-hearts"></div>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Sen Benim<br>Beşinci Mevsimimsin</h1>
+            <p>- Senden Öncesi Yok, Senden Sonrası Olmayacak -</p>
+            <i class="fas fa-chevron-down" style="margin-top: 60px; color: var(--primary); font-size: 1.5rem; animation: pulse 2s infinite;"></i>
+        </section>
+
+        <div class="letter-card">
+            <h2 style="margin-bottom: 30px; color: var(--primary);">Özür Dilerim Her Şeyim...</h2>
+            <p>
+                Güzelim, yazdığın her kelimeyi kalbime kazıdım ve tekrar tekrar okudum. Çok haklısın.
+                <br><br>
+                Sana kendimi, içinde bulunduğum o stresi, ailemi ve geleceğimizi düzeltme çabamı anlatırken en büyük hatayı yaptım: <span class="highlight">Seni, yani kalbimi sevmeyi ihmal ettim.</span>
+                <br><br>
+                Ben kafamda "bizim" için bir kale inşa etmeye çalışırken, o kalenin kraliçesini yalnız bıraktım. Yanımdayken bile aklımın gelecekte olması, sana olan sevgimi gösterememem benim en büyük ayıbım.
+                <br><br>
+                Seni ihmal ettiğim, önemsiz hissettirdiğim her saniye için binlerce kez özür dilerim. Gelecek kaygısı gözümü kör etmiş, oysa benim en parlak geleceğim zaten yanı başımda duruyormuş.
+                <br><br>
+                Senden zaman istemiyorum, <span class="highlight">o zamanı sana vermek, her anında yanında olmak istiyorum.</span> O eski bakışlarım, sana olan hayranlığım, içimdeki o büyük aşk... Hiçbiri kaybolmadı sevgilim, sadece telaşın tozu altında kaldı. Şimdi o tozu siliyorum.
+                <br><br>
+                Lütfen beni bu hatalarımla yargılama. Ben hala sana ilk günkü gibi aşık, o eski adamım. Seni çok seviyorum.
+            </p>
+        </div>
+
+        <h2 class="section-title">Sende Sevdiğim Detaylar</h2>
+        <div class="details-section">
+            <div class="detail-item">
+                <div class="detail-icon"><i class="fas fa-smile-beam"></i></div>
+                <div>
+                    <h4 style="color: var(--gold); margin-bottom: 5px;">Gülerken Kısılan Gözlerin</h4>
+                    <p style="font-size: 0.9rem; color: #ccc;">Sen gül, gözlerin kısılsın; bırak zaman o çizgide takılı kalsın.</p>
+                </div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-icon"><i class="fas fa-hands-holding-circle"></i></div>
+                <div>
+                    <h4 style="color: var(--gold); margin-bottom: 5px;">Beni Toparlayışın</h4>
+                    <p style="font-size: 0.9rem; color: #ccc;">Her zaman her zorlukta benim yanımda olup beni herşeyin içinden tekrar tekrar çıkardığın için sana çok teşekkür ederim sevgilim.</p>
+                </div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-icon"><i class="fas fa-moon"></i></div>
+                <div>
+                    <h4 style="color: var(--gold); margin-bottom: 5px;">Masumiyetin</h4>
+                    <p style="font-size: 0.9rem; color: #ccc;">O temiz kalbin, hiç bir zaman bana kıyamaman, o kadar güzel ve o kadar iyisinki her zaman iyiki sen dedirttiğin için çok teşekkür ederim. İYİKİM</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Neden Sadece Sen?</h2>
+        <div class="reasons-grid">
+            <div class="reason-card">
+                <i class="fas fa-anchor reason-icon"></i>
+                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; margin-bottom: 10px;">Limanım</h3>
+                <p style="color: #aaa;">Hayat ne kadar dalgalı olursa olsun; benim pusulam hep seni, rotam hep senin kıyılarını gösteriyor.</p>
+            </div>
+            <div class="reason-card">
+                <i class="fas fa-hourglass-half reason-icon"></i>
+                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; margin-bottom: 10px;">Sabrım</h3>
+                <p style="color: #aaa;">En dağınık anlarımda bile beni şefkatiyle toparlayanım... Zihnimdeki gürültüyü susturup, beni tek bakışıyla iyileştiren mucizem.</p>
+            </div>
+            <div class="reason-card">
+                <i class="fas fa-route reason-icon"></i>
+                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; margin-bottom: 10px;">Yol Arkadaşım</h3>
+                <p style="color: #aaa;">Yol nereye çıkarsa çıksın, manzaram hep senin yüzün olsun. Seninle yürüdüğüm en dikenli yollar bile bana gökyüzü gibi gelir sevgilim.</p>
+            </div>
+            <div class="reason-card">
+                <i class="fas fa-heart reason-icon"></i>
+                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; margin-bottom: 10px;">Bitmez</h3>
+                <p style="color: #aaa;">Daha buraya sığdıramadığım o kadar çok neden varki sevgilim, sen benim herşeyimsin, iyikimsini kızımsın, neden sen değil hep sen sevgilim.</p>
+            </div>
+        </div>
+
+        <h2 class="section-title">Bizim Hikayemiz</h2>
+        <div class="gallery">
+            <div class="photo-frame">
+                <img src="1.JPEG" alt="Biz">
+                <div class="photo-caption">Seninle her an güzel...</div>
+            </div>
+            <div class="photo-frame">
+                <img src="2.JPEG" alt="Gülüşün">
+                <div class="photo-caption">Bu gülüş için dünyayı yakarım</div>
+            </div>
+            <div class="photo-frame">
+                <img src="3.JPEG" alt="Anılar">
+                <div class="photo-caption">Güzel günler bizi bekler</div>
+            </div>
+        </div>
+
+        <div class="action-area">
+            <i class="fas fa-heart" style="font-size: 4rem; color: var(--primary); margin-bottom: 30px; animation: pulse 1s infinite;"></i>
+            <h2 style="margin-bottom: 20px;">Beni Affeder Misin?</h2>
+            <p style="margin-bottom: 40px; color: #ccc;">Her şeyi telafi etmeme izin ver...</p>
+            
+            <button id="forgive-btn" onclick="celebrateLove()">Evet, Yeniden Başlayalım</button>
+            
+            <div id="success-msg" class="hidden-msg">
+                <p>Söz veriyorum, seni dünyanın en mutlu insanı yapacağım ❤️</p>
+                <br>
+                <i class="fas fa-infinity" style="font-size: 2rem;"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById("bg-music");
+        const overlay = document.getElementById("intro-overlay");
+        const musicBtn = document.getElementById("music-btn");
+
+        function startExperience() {
+            audio.volume = 0.4;
+            audio.play().then(() => {
+                musicBtn.classList.add("playing");
+            }).catch(e => console.log("Otomatik oynatma engellendi"));
+
+            overlay.style.opacity = "0";
+            setTimeout(() => {
+                overlay.style.display = "none";
+                createHeartRain();
+            }, 1500);
+        }
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                musicBtn.classList.add("playing");
+            } else {
+                audio.pause();
+                musicBtn.classList.remove("playing");
+            }
+        }
+
+        function createHeartRain() {
+            const container = document.getElementById('background-hearts');
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+                heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+                heart.style.opacity = Math.random();
+                container.appendChild(heart);
+                setTimeout(() => heart.remove(), 7000);
+            }, 300);
+        }
+
+        function celebrateLove() {
+            const btn = document.getElementById('forgive-btn');
+            const msg = document.getElementById('success-msg');
+            
+            btn.style.display = 'none';
+            msg.style.display = 'block';
+
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff0a54', '#ffd700', '#ffffff']
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff0a54', '#ffd700', '#ffffff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = entry.target.classList.contains('photo-frame') ? 'none' : 'translateY(0)';
+                    
+                    // Photo frame için özel işlem: Sadece opacity'yi 1 yap, transform'u CSS'e bırak
+                    if(entry.target.classList.contains('photo-frame')) {
+                         entry.target.style.transform = ''; // CSS'deki rotate'i korumak için inline style'ı sil
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.letter-card, .detail-item, .reason-card, .photo-frame').forEach((el) => {
+            el.style.opacity = 0;
+            // Fotoğraf kartlarına translateY eklemiyoruz ki rotate bozulmasın, sadece fade-in olsun
+            if(!el.classList.contains('photo-frame')) {
+                el.style.transform = 'translateY(40px)';
+            }
+            el.style.transition = 'all 0.8s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
